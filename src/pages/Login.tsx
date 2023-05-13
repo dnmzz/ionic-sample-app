@@ -39,7 +39,7 @@ const Login: React.FC = () => {
     const accessToken = cookies.get("accessToken");
     if (accessToken) {
       // Redirect to the dashboard
-      history.push(`/dashboard/${email}`);
+      history.push(`/dashboard/`);
     }
   }, []); // Empty dependency array to run this effect only once
 
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
     try {
       const token = await login(email, password);
       cookies.set("accessToken", token, { path: "/" }); // set the accessToken in cookies
-      history.push("/dashboard/" + email);
+      history.push("/dashboard/");
     } catch (error) {
       setMessage("Auth failure! Please create an account");
       setIserror(true);
