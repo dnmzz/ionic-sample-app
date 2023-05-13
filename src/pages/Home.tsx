@@ -1,30 +1,78 @@
+import React, { useEffect } from "react";
 import {
+  IonButton,
+  IonCardTitle,
+  IonCol,
   IonContent,
+  IonFooter,
+  IonGrid,
   IonHeader,
+  IonImg,
   IonPage,
-  IonTitle,
-  IonToolbar,
+  IonRouterLink,
+  IonRow,
 } from "@ionic/react";
-import React from "react";
-import ExploreContainer from "../components/ExploreContainer";
-import "./Home.css";
+import { useHistory } from "react-router-dom";
+import Action from "../components/Action";
+import styles from "./Home.module.css";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 const Home: React.FC = () => {
+  const history = useHistory();
+  useEffect(() => {
+    // Check if the access token exists in cookies
+    const accessToken = cookies.get("accessToken");
+    if (accessToken) {
+      // Redirect to the dashboard
+      history.push(`/dashboard/`);
+    }
+  }, [history]); // Empty dependency array to run this effect only once
+
+
+
   return (
-    <IonPage>
+    <IonPage className={styles.homePage}>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Blank</IonTitle>
-        </IonToolbar>
+        <IonImg src="https://raw.githubusercontent.com/alanmontgomery/ionic-react-login/main/public/assets/login2.jpeg" />
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+        <div className={styles.getStarted}>
+          <IonGrid>
+            <IonRow
+              className={`ion-text-center ion-justify-content-center ${styles.heading}`}
+            >
+              <IonCol size="11" className={styles.headingText}>
+                <IonCardTitle>
+                  Join millions of other people discovering their creative side
+                </IonCardTitle>
+              </IonCol>
+            </IonRow>
+
+            <IonRow className={`ion-text-center ion-justify-content-center`}>
+              <IonRouterLink routerLink="/signup" className="custom-link">
+                <IonCol size="11">
+                  <IonButton
+                    className={`${styles.getStartedButton} custom-button`}
+                  >
+                    Get started &rarr;
+                  </IonButton>
+                </IonCol>
+              </IonRouterLink>
+            </IonRow>
+          </IonGrid>
+        </div>
       </IonContent>
+
+      <IonFooter>
+        <IonGrid>
+          <Action
+            message="Already got an account?"
+            text="Login"
+            link="/login"
+          />
+        </IonGrid>
+      </IonFooter>
     </IonPage>
   );
 };

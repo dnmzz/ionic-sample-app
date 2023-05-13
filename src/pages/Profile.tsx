@@ -4,7 +4,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonItemDivider,
   IonButton,
   IonButtons,
 } from "@ionic/react";
@@ -13,6 +12,7 @@ import { useHistory, RouteComponentProps } from "react-router-dom";
 import { IonGrid, IonRow, IonCol } from "@ionic/react";
 import { IonItem, IonLabel, IonAvatar } from "@ionic/react";
 import { getUsers } from "../services/users/UsersService";
+import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 
 interface ResetProps
@@ -20,20 +20,24 @@ interface ResetProps
     id: string;
   }> {}
 
-const Dashboard: React.FC<ResetProps> = ({ match }) => {
+const Dashboard: React.FC<ResetProps> = () => {
   const history = useHistory();
   const [users, setUsers] = useState<Array<any>>([]);
+  const [userInfo, setUserInfo] = useState<any>([]);
   const token = Cookies.get("accessToken");
 
   const handleLogout = () => {
     Cookies.remove("accessToken");
-    history.push("/login");
+    history.push("/home");
   };
 
   useEffect(() => {
     if (!token) {
       return;
     }
+
+    const userInfo = jwt_decode(token);
+    setUserInfo(userInfo);
 
     const fetchUsers = async () => {
       const users = await getUsers(token);
@@ -58,8 +62,7 @@ const Dashboard: React.FC<ResetProps> = ({ match }) => {
         <IonGrid>
           <IonRow>
             <IonCol>
-              <h4>Welcome: {match.params.id}</h4>
-              <IonItemDivider></IonItemDivider>
+              <h4>Welcome {userInfo.email}</h4>
             </IonCol>
           </IonRow>
           <IonRow>
